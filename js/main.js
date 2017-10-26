@@ -59,7 +59,8 @@ $(document).ready(function() {
       debugmode = true;
    if(window.location.search == "?easy")
       pipeheight = 200;
-   
+   window.resizeTo(320, 320);
+
    //get the highscore
    var savedscore = getCookie("highscore");
    if(savedscore != "")
@@ -445,8 +446,8 @@ $("#replay").click(function() {
       //when that's done, display us back to nothing
       $("#scoreboard").css("display", "none");
       
-      //start the game over!
-      showSplash();
+      // back to work.
+      window.close();
    });
 });
 
