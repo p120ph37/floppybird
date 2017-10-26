@@ -41,25 +41,40 @@ var pipes = new Array();
 
 var replayclickable = false;
 
-//sounds
-var volume = 30;
-var soundJump = new buzz.sound("assets/sounds/sfx_wing.ogg");
-var soundScore = new buzz.sound("assets/sounds/sfx_point.ogg");
-var soundHit = new buzz.sound("assets/sounds/sfx_hit.ogg");
-var soundDie = new buzz.sound("assets/sounds/sfx_die.ogg");
-var soundSwoosh = new buzz.sound("assets/sounds/sfx_swooshing.ogg");
-buzz.all().setVolume(volume);
-
 //loops
 var loopGameloop;
 var loopPipeloop;
 
+var qd = {};
+if(location.search) {
+  location.search.substr(1).split("&").forEach(function(item) {
+    qd[item.split("=")[0]] = item.split("=")[1] && decodeURIComponent(item.split("=")[1]) || '';
+  })
+}
+//////////////////////////
+// Termcode definitions //
+//////////////////////////
+switch(qd.term) {
+  case 'AGENT - PTP Arranged':
+    pipeheight = 75;
+    gravity = 0.50;
+    jump = -3.45;
+    break;
+  case 'AGENT - PTP Credit Card':
+    pipeheight = 150;
+    gravity = 0.25;
+    jump = -4.6;
+    break;
+  default: // Anything Else
+    window.close();
+    $(document).ready(function() { $('#gamecontainer').hide(); });
+}
+window.resizeTo(500, 500);
+
+
 $(document).ready(function() {
-   if(window.location.search == "?debug")
+   if(qd[debug])
       debugmode = true;
-   if(window.location.search == "?easy")
-      pipeheight = 200;
-   window.resizeTo(320, 320);
 
    //get the highscore
    var savedscore = getCookie("highscore");
@@ -104,8 +119,8 @@ function showSplash()
    $("#player").css({ y: 0, x: 0});
    updatePlayer($("#player"));
    
-   soundSwoosh.stop();
-   soundSwoosh.play();
+//   soundSwoosh.stop();
+//   soundSwoosh.play();
    
    //clear out all the pipes if there are any
    $(".pipe").remove();
@@ -285,8 +300,8 @@ function playerJump()
 {
    velocity = jump;
    //play jump sound
-   soundJump.stop();
-   soundJump.play();
+//   soundJump.stop();
+//   soundJump.play();
 }
 
 function setBigScore(erase)
@@ -376,11 +391,11 @@ function playerDead()
    else
    {
       //play the hit sound (then the dead sound) and then show score
-      soundHit.play().bindOnce("ended", function() {
-         soundDie.play().bindOnce("ended", function() {
+//      soundHit.play().bindOnce("ended", function() {
+//         soundDie.play().bindOnce("ended", function() {
             showScore();
-         });
-      });
+//         });
+//      });
    }
 }
 
@@ -407,16 +422,16 @@ function showScore()
    var wonmedal = setMedal();
    
    //SWOOSH!
-   soundSwoosh.stop();
-   soundSwoosh.play();
+//   soundSwoosh.stop();
+//   soundSwoosh.play();
    
    //show the scoreboard
    $("#scoreboard").css({ y: '40px', opacity: 0 }); //move it down so we can slide it up
    $("#replay").css({ y: '40px', opacity: 0 });
    $("#scoreboard").transition({ y: '0px', opacity: 1}, 600, 'ease', function() {
       //When the animation is done, animate in the replay button and SWOOSH!
-      soundSwoosh.stop();
-      soundSwoosh.play();
+//      soundSwoosh.stop();
+//      soundSwoosh.play();
       $("#replay").transition({ y: '0px', opacity: 1}, 600, 'ease');
       
       //also animate in the MEDAL! WOO!
@@ -438,8 +453,8 @@ $("#replay").click(function() {
    else
       replayclickable = false;
    //SWOOSH!
-   soundSwoosh.stop();
-   soundSwoosh.play();
+//   soundSwoosh.stop();
+//   soundSwoosh.play();
    
    //fade out the scoreboard
    $("#scoreboard").transition({ y: '-40px', opacity: 0}, 1000, 'ease', function() {
@@ -455,8 +470,8 @@ function playerScore()
 {
    score += 1;
    //play score sound
-   soundScore.stop();
-   soundScore.play();
+//   soundScore.stop();
+//   soundScore.play();
    setBigScore();
 }
 
